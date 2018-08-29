@@ -23,3 +23,11 @@ src/components/TrackSpending.js
 
 ### server
 server.js
+
+### Todo
+Add sum function
+Add keep function
+nginx
+components move to components
+Beautify
+Research how to copy to another PC
