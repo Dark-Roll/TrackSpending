@@ -1,13 +1,13 @@
-const express = require('express');
+const express = require('../../../AppData/Local/Microsoft/TypeScript/2.9/node_modules/@types/express');
 const http = require('http');
 const app = express();
 const server = http.createServer(app);
-const socketIO = require('socket.io')
+const socketIO = require('../../../AppData/Local/Microsoft/TypeScript/2.9/node_modules/@types/socket.io')
 const io = socketIO(server)
 
 const port = 5000;
 
-const MongoClient = require('mongodb').MongoClient;
+const MongoClient = require('../../../AppData/Local/Microsoft/TypeScript/2.9/node_modules/@types/mongodb').MongoClient;
 
 io.on('connection', function (socket) {
     console.log("connect socket");
@@ -25,7 +25,7 @@ io.on('connection', function (socket) {
             const myAwesomeDB = db.db('local')
             myAwesomeDB.collection('Persons', function (err, collection) {
 
-                collection.insert({ id: 1, firstName: 'Steve', lastName: 'Jobs' });
+                // collection.insert({ id: 1, firstName: 'Steve', lastName: 'Jobs' });
                 // collection.insert(data);
                 // collection.insert({ id: 3, firstName: 'James', lastName: 'Bond' });
 
