@@ -39,7 +39,10 @@ export default class TrackSpendingForm extends Component {
                         </tr>
                     </tbody>
                 </table>
-                <button
+                <button 
+                    style={{
+                        'height': '2500px'
+                    }}
                     onClick={() => {
                         console.log(this.props)
                         

@@ -10,18 +10,18 @@ class TrackSpendingRecord extends Component {
     price: "",
     endpoint: "http://192.168.59.130:5000"
   };
-  
+
 
   send() {
     // 連線位置 
     // console.log('before send');
     const socket = socketIO(this.state.endpoint)
     // console.log(socket);
-        
-    socket.emit('save', 'red') 
+
+    socket.emit('save', 'red')
     // console.log("work ?");
   }
-  
+
   render() {
     // Artwork
     // .find()
@@ -29,8 +29,16 @@ class TrackSpendingRecord extends Component {
     //   console.log(result)
     // })
 
+    // reset css
     return (
       <div>
+        <header style={{ width: '100%', height: '200px', backgroundColor: 'black', position: 'fixed' }}>
+
+        </header>
+        <br />
+        <div style={{marginTop:'200px'}}>
+          
+        </div>
         項目:
 
         <input className="spendingItem"
@@ -58,9 +66,9 @@ class TrackSpendingRecord extends Component {
         <TrackSpendingForm
           // spending={this.state.spending} 
           item={this.state.buyingItem}
-          price={this.state.price} 
-          
-          />
+          price={this.state.price}
+
+        />
 
 
         <button
