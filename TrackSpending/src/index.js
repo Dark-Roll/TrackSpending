@@ -1,6 +1,6 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import './css/index.css';
+import './scss/index.css';
 import TrackSpendingRecord from './components/TrackSpendingRecord';
 import registerServiceWorker from './registerServiceWorker';
 

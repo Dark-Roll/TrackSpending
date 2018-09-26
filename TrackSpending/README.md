@@ -16,6 +16,10 @@ npm start
 
 node server.js (Open server)
 
+// translate scss to css 
+sass --watch .\scss\:css
+
+
 ### Components
 src/App.js
 

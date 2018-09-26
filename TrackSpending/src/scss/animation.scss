@@ -1,0 +1,58 @@
+.header.dark .logo {}
+
+.header .logo {
+    display: inline-block;
+    width: 115px;
+    height: 90px;
+    background-image: url(../assets/logo.svg);
+    background-size: cover; // width: 
+}
+
+.header:not(.headroom--top).slideDown {
+    box-shadow: 0 1px 20px 0 rgba(0, 0, 0, .1);
+}
+
+.animated.slideDown {
+    animation-name: slideDown
+}
+
+.header.dark,
+:not(.headroom--top).slideDown {
+    padding-bottom: 25px;
+    background-color: #fff;
+}
+
+//  scss 編譯不過, but why ?
+.animated {
+    animation-duration: .5s;
+    animation-fill-mode: both;
+    will-change: transform, opacity;
+}
+
+.header {
+    box-sizing: border-box;
+    top: 0;
+    height: 90px;
+    z-index: 10;
+    width: 100%;
+    position: fixed;
+    transition: background-color 250ms linear;
+}
+
+@keyframes slideUp {
+    0% {
+        transform: translateY(0);
+    }
+    100% {
+        transform: translateY(-100%);
+    }
+}
+
+@keyframes slideDown {
+    0% {
+        transform: translateY(-100%);
+    }
+    100% {
+        transform: translateY(0);
+    }
+}
