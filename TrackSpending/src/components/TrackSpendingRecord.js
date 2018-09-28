@@ -5,17 +5,33 @@ import socketIO from 'socket.io-client';
 import TrackSpendingForm from './TrackSpendingForm';
 import '../css/animation.css';
 import Header from './Header';
+import { newBreakfast, deleteBreakfast } from '../actions/breakfastAction';
 // import '../scss/animation.css';
 // import '../scss/index.css';
+import { connect } from 'react-redux';
+import { withRouter } from 'react-router';
 
 class TrackSpendingRecord extends Component {
-  state = {
-    buyingItem: "",
-    price: "",
-    lastScrollY: 0,
-    isSlideDown:false,
-    endpoint: "http://192.168.59.130:5000"
-  };
+  constructor(props) {
+    super(props);
+    this.breakfastListCounter = 0;
+    this.state = {
+      // buyingItem: "",
+      price: "",
+      lastScrollY: 0,
+      isSlideUp: false,
+
+      goodsTags: {
+        早餐: [],
+        午餐: [],
+        晚餐: [],
+        宵夜: [],
+        // 
+      },
+
+      endpoint: "http://192.168.59.130:5000"
+    };
+  }
 
   componentDidMount() {
     // console.log(this.refs.wrapper.addEventListener('scroll', this.toggleShow, true))
@@ -50,21 +66,34 @@ class TrackSpendingRecord extends Component {
 
   toggleShow = (e) => {
 
-    console.log(window.scrollY)
+    // console.log(window.scrollY)
     if (window.scrollY <= this.state.lastScrollY) {
       // console.log("true")
-      this.setState({ isSlideDown: true})
+      this.setState({ isSlideUp: true })
 
       // class + slideDown
     } else {
-      this.setState({ isSlideDown: false})
+      this.setState({ isSlideUp: false })
       // console.log(window.scrollY,this.state.lastScrollY,"fua")
     }
     this.setState({ lastScrollY: window.scrollY });
   }
 
-  render() {
 
+  onClickNewBreakfast(e) {
+    const ID = this.breakfastListCounter += 1;
+    this.props.dispatch(newBreakfast(ID));
+  }
+
+
+
+  render() {
+    console.log(this.props)
+    // let breakfastDetail = this.props.breakfastList.map((item)=>{
+    //   return (<div style={{backgroundColor:'red'}}>
+    //     item
+    //   </div>)
+    // })
 
     // let styles = { }
     //   container: {
@@ -82,74 +111,105 @@ class TrackSpendingRecord extends Component {
     // reset css
     return (
       <div>
-        
 
-        <Header isSlideDown={this.state.isSlideDown}    lastScrollY={this.state.lastScrollY} />
+        <Header isSlideUp={this.state.isSlideUp} lastScrollY={this.state.lastScrollY} />
+        <div id="globalContainer">
 
-        {/* <header
-          className="header animated headroom--not-top headroom--not-bottom slideDown"
-          // style={{ width: '100%', height: '200px', backgroundColor: 'black', position: 'fixed' }}
+          {/* <breakfastDetail/> */}
+
+          {/* return (
+      <Wrapper>
+        <Dropdown
+          placeholder="請選擇課程"
+          fluid
+          search
+          selection
+          options={options}
+          value={value}
+          onChange={onChange}
+        />
+      </Wrapper>
+    ); */}
+
+          {/*
         // onScroll={(e) => { this.toggleShow(e) }}
         // ref={this.toggleShow}
         >
-          <a href="#" className="logo"></a>
-
         </header> */}
-          {/* <img src={ReactLogo} alt="logo" /> */}
 
+          <br />
+          <div style={{ marginTop: '200px' }}>
 
-
-        <br />
-        <div style={{ marginTop: '200px' }}>
-
-        </div>
-        項目:
+          </div>
+          項目:
 
         <input className="spendingItem"
-          onChange={e => {
-            this.setState({
-              spending: e.target.value
-            });
-          }}
-        />
-        價錢:
+            onChange={e => {
+              this.setState({
+                spending: e.target.value
+              });
+            }}
+          />
+
+          <button
+            onClick={e => {
+              this.onClickNewBreakfast(e)
+            }}
+          >早餐</button>
+          {/* 午餐 晚餐 宵夜 活動(社交、娛樂) 活動(學習) 飲料(咖啡廳 下午茶))  */}
+          {/* (衣服 住 看電影 買書 悠遊卡 加油) */}
+
+          價錢:
         <input className="priceItem"
-          onChange={e => {
-            this.setState({
-              price: e.target.value
-            });
-          }}
-        />
-        <button
-          onClick={() => {
-            // 捲軸是不是在最頂
-            // console.log(this.toggleShow)
-            console.log(window.scrollY)
-            console.log(this.state.spending, this.state.price);
-          }}
-        >
-          記起來
-        </button>
-        <TrackSpendingForm
-          // spending={this.state.spending} 
-          item={this.state.buyingItem}
-          price={this.state.price}
+            onChange={e => {
+              this.setState({
+                price: e.target.value
+              });
+            }}
+          />
+          <button
+            onClick={() => {
+              // 捲軸是不是在最頂
+              // console.log(this.toggleShow)
+              console.log(window.scrollY)
+              console.log(this.state.spending, this.state.price);
+            }}
+          >
+            記起來
+          </button>
 
-        />
+          {/*   */}
+          <TrackSpendingForm
+            // spending={this.state.spending} 
+            item={this.state.buyingItem}
+            price={this.state.price}
+
+          />
 
 
-        <button
-          onClick={() => {
-            // console.log(this);
-            // this.printSocketTest(this.state.price)
-            this.send()
-          }}
-        >Test
-      </button>
-
+          <button
+            onClick={() => {
+              // console.log(this);
+              // this.printSocketTest(this.state.price)
+              this.send()
+            }}
+          >Test
+          </button>
+        </div>
       </div>
     );
   }
 }
 
-export default TrackSpendingRecord;
+const mapStateToProps = state => {
+  return {
+    breakfastID: state.breakfast.id
+    // roomID: state.room.roomID,
+    // roomOwner: state.room.roomOwner,
+    // topic: state.room.topic,
+    // stickyArray: state.stickyNote
+  }
+}
+export default withRouter(connect(mapStateToProps)(TrackSpendingRecord));
+
+// export default TrackSpendingRecord;
