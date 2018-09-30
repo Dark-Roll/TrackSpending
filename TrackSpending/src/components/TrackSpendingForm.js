@@ -1,11 +1,41 @@
 import React, { Component } from 'react';
 
+import { connect } from 'react-redux';
+import { withRouter } from 'react-router';
+import ShowSpending from './ShowSpending';
+
 export default class TrackSpendingForm extends Component {
-    // constructor(props) {
-    //     super(props);
-    // }
+    constructor(props) {
+        super(props);
+    }
 
     render() {
+        console.log(this.props)
+
+
+        let breakfastDetail
+        // 這什麼時候更新 scroll makes the update, why?
+        // avoid 0, but can it work?
+        // no but it still has a default run the map function
+        // comment out the reducer, it successes
+        if (this.props.breakfastList.length > 0) {
+            breakfastDetail = this.props.breakfastList.map((e) => {
+                return (
+                    // <div key={e.id}>
+                        
+                        <ShowSpending
+                            key ={e.id}
+                            goodsTag={this.props.goodsTag}
+                            price={e.price}
+                        />
+                        
+                    // </div>
+                );
+            })
+        }
+
+
+
         return (
             <div>
                 {/* td[rowspan=2 colspan=3 title] */}
@@ -32,30 +62,47 @@ export default class TrackSpendingForm extends Component {
                             <td>100</td>
                             <td>5</td>
                         </tr>
-                        <tr>
+                        {/* <tr>
                             <td>show value1</td>
                             <td></td>
                             <td></td>
+                        </tr> */}
+                        <tr>
+                            <td>{this.props.goodsTag}</td>
+                            <td>{this.props.price}</td>
+                            <td></td>
                         </tr>
+                        {/* <tr> */}
+                            {/* <td>{this.props.goodsTag}</td>
+                            <td>{this.props.price}</td>
+                            <td></td> */}
+                            {/* click 早餐就會 show 東西出來 */}
+                            {/* 點價錢要在按記起來才會跑 row */}
+                        {/* </tr> */}
+                        {breakfastDetail}
+
+
+
                     </tbody>
                 </table>
-                <button 
+
+                <button
                     style={{
                         'height': '2500px'
                     }}
                     onClick={() => {
                         console.log(this.props)
-                        
+
                     }}
                 >get Prop Value
                 </button>
 
                 <button
-                    onClick={()=>{
-                        
+                    onClick={() => {
+
                     }}
                 >
-                    sum 
+                    sum
                 </button>
 
 
@@ -67,3 +114,17 @@ export default class TrackSpendingForm extends Component {
     }
 
 }
+
+
+// const mapStateToProps = state => {
+//     return {
+//       // breakfastID: state.breakfast.id,
+//       breakfastList: state.breakfast,
+//       // agendaList: state.agenda
+//       // roomID: state.room.roomID,
+//       // roomOwner: state.room.roomOwner,
+//       // topic: state.room.topic,
+//       // stickyArray: state.stickyNote
+//     }
+//   }
+//   export default withRouter(connect(mapStateToProps)(TrackSpendingForm));

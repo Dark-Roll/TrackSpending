@@ -11,12 +11,15 @@ import { newBreakfast, deleteBreakfast } from '../actions/breakfastAction';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router';
 
+
+import ShowSpending from './ShowSpending';
+
 class TrackSpendingRecord extends Component {
   constructor(props) {
     super(props);
-    this.breakfastListCounter = 0;
+    this.breakfastListCounter = -1;
     this.state = {
-      // buyingItem: "",
+      goodsTag: "",
       price: "",
       lastScrollY: 0,
       isSlideUp: false,
@@ -79,26 +82,58 @@ class TrackSpendingRecord extends Component {
     this.setState({ lastScrollY: window.scrollY });
   }
 
+  onClickNewLunch(e) {
+    const date = new Date()
+    const formattedTime = `${date.getHours()}:
+      ${(date.getMinutes() < 10 ? '0' : '')}${date.getMinutes()}:
+      ${date.getSeconds()}`;
+
+    console.log(formattedTime)
+  }
 
   onClickNewBreakfast(e) {
+    const date = new Date()
+    const formattedTime = `${date.getHours()}:
+      ${(date.getMinutes() < 10 ? '0' : '')}${date.getMinutes()}:
+      ${date.getSeconds()}`;
+
+    // socket emit
     const ID = this.breakfastListCounter += 1;
-    this.props.dispatch(newBreakfast(ID));
+
+    this.props.dispatch(newBreakfast({
+      id: ID,
+      price: this.state.price,
+      time: formattedTime,
+    }));
+    // 印不到最後一筆
+    // 船過去 show spending 會有 值，會傳兩次 why?
+    console.log(this.props)
   }
 
 
 
   render() {
-    console.log(this.props)
     // let breakfastDetail = this.props.breakfastList.map((item)=>{
     //   return (<div style={{backgroundColor:'red'}}>
     //     item
     //   </div>)
     // })
 
-    // let styles = { }
-    //   container: {
-    //     'animation-name': 'slideDown',
-    //     .header.dark, :not(.headroom--top).slideDown:{
+
+    // let breakfastDetail
+    // // 這什麼時候更新 scroll makes the update, why?
+    // if (this.props.breakfastList.length > 0) {
+    //   breakfastDetail = this.props.breakfastList.map((e) => {
+    //     return (
+    //       <div key={e.id}>
+    //         <TrackSpendingForm
+    //           goodsTag={this.state.goodsTag}
+    //           price={e.price}
+    //         />
+    //       </div>
+    //     );
+    //   })
+    // }
 
 
 
@@ -114,6 +149,7 @@ class TrackSpendingRecord extends Component {
 
         <Header isSlideUp={this.state.isSlideUp} lastScrollY={this.state.lastScrollY} />
         <div id="globalContainer">
+
 
           {/* <breakfastDetail/> */}
 
@@ -140,6 +176,8 @@ class TrackSpendingRecord extends Component {
           <br />
           <div style={{ marginTop: '200px' }}>
 
+            {/* {breakfastDetail} */}
+
           </div>
           項目:
 
@@ -151,9 +189,12 @@ class TrackSpendingRecord extends Component {
             }}
           />
 
+          {/* 每案一次就會新增一次 */}
           <button
-            onClick={e => {
-              this.onClickNewBreakfast(e)
+            onClick={() => {
+              this.setState({
+                goodsTag: "breakfast"
+              })
             }}
           >早餐</button>
           {/* 午餐 晚餐 宵夜 活動(社交、娛樂) 活動(學習) 飲料(咖啡廳 下午茶))  */}
@@ -168,22 +209,37 @@ class TrackSpendingRecord extends Component {
             }}
           />
           <button
-            onClick={() => {
+            onClick={e => {
+
+              if (!this.state.goodsTag) return
+              switch (this.state.goodsTag) {
+                case "breakfast":
+                  this.onClickNewBreakfast(e)
+                  break;
+                case "lunch":
+                  this.onClickNewLunch(e)
+                  break;
+                default:
+                  return;
+              }
+
               // 捲軸是不是在最頂
               // console.log(this.toggleShow)
-              console.log(window.scrollY)
-              console.log(this.state.spending, this.state.price);
-            }}
+              // console.log(window.scrollY)
+              // console.log(this.state.spending, this.state.price);
+            }
+            }
           >
             記起來
           </button>
 
-          {/*   */}
+          {/* {breakfastDetail} */}
+          {/*  做個新增 */}
           <TrackSpendingForm
-            // spending={this.state.spending} 
-            item={this.state.buyingItem}
+            // spending={this.state.spending}
+            breakfastList={this.props.breakfastList}
+            goodsTag={this.state.goodsTag}
             price={this.state.price}
-
           />
 
 
@@ -203,7 +259,9 @@ class TrackSpendingRecord extends Component {
 
 const mapStateToProps = state => {
   return {
-    breakfastID: state.breakfast.id
+    // breakfastID: state.breakfast.id,
+    breakfastList: state.breakfast,
+    // agendaList: state.agenda
     // roomID: state.room.roomID,
     // roomOwner: state.room.roomOwner,
     // topic: state.room.topic,

@@ -1,16 +1,15 @@
 $logoColor :rgb(97, 218, 251);
-
-#globalContainer{
+#globalContainer {
     width: 1182px;
     border: 1px purple solid;
     margin: 0 auto;
 }
+
 // .header .logo
 .header.slideUp {
     box-shadow: 0 1px 20px 0 rgba(0, 0, 0, .1);
-    background:$logoColor;
+    background: $logoColor;
     .logo {
-
         display: inline-block;
         width: 115px;
         height: 90px;
@@ -19,18 +18,15 @@ $logoColor :rgb(97, 218, 251);
     }
 }
 
-.headr .logo{
-}
+.headr .logo {}
 
 // can be modified
 // .header.dark .logo, 
 :not(.headroom--top).slideUp .logo {
     // .header .logo {
-
     background-image: url(../assets/logo.svg);
     background-size: cover; // width: 
 }
-
 
 .header {
     box-sizing: border-box;
@@ -90,8 +86,23 @@ $logoColor :rgb(97, 218, 251);
     }
 }
 
-
 @keyframes App-logo-spin {
-    from { transform: rotate(0deg); }
-    to { transform: rotate(360deg); }
-  }
+    from {
+        transform: rotate(0deg);
+    }
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+@keyframes tri {
+    0% {
+        transform: rotate(0deg);
+    }
+    50% {
+        transform: rotate(180deg);
+    }
+    100% {
+        transform: rotate(360deg);
+    }
+}

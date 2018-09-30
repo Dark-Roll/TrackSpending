@@ -1,7 +1,7 @@
-export function newBreakfast(id) {
+export function newBreakfast(obj) {
 	return {
 		type: "newBreakfast",
-		data: id
+		data: obj
 	};
 }
 

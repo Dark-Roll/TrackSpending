@@ -1,11 +1,11 @@
 const breakfastList = [
-    {
-        id: 0,
-        price: undefined,
-        interest: undefined,
-        createTime: undefined,
-        finishTime: undefined,
-    },
+    // {
+    //     id: undefined,
+    //     price: undefined,
+    //     interest: undefined,
+    //     createTime: undefined,
+    //     finishTime: undefined,
+    // },
 ];
 
 // const goodsList= [
@@ -36,10 +36,10 @@ export default function breakfast(state = breakfastList, action) {
             return [
                 ...state,
                 {
-                    id: action.data,
-                    price: undefined,
+                    id: action.data.id,
+                    price: action.data.price,
                     interest: undefined,
-                    createTime: undefined,
+                    createTime: action.data.time,
                     finishTime: undefined,
                 },
             ];
