@@ -3,6 +3,7 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router';
 import ShowSpending from './ShowSpending';
+// import uuidv1 from 'uuid/v1';
 
 export default class TrackSpendingForm extends Component {
     constructor(props) {
@@ -14,12 +15,38 @@ export default class TrackSpendingForm extends Component {
 
 
         let breakfastDetail
+        let spendingDetail
         // 這什麼時候更新 scroll makes the update, why?
         // avoid 0, but can it work?
         // no but it still has a default run the map function
         // comment out the reducer, it successes
-        if (this.props.breakfastList.length > 0) {
-            breakfastDetail = this.props.breakfastList.map((e) => {
+        // 早餐午餐照順序排 但是不知道是哪個
+        // goodsTag 不是固定值 合併就要多紀錄 type值
+        if (this.props.breakfastList.length > 0 || this.props.lunchList.length > 0) {
+            let spendingList = this.props.breakfastList.concat(this.props.lunchList)
+            console.log(spendingList)
+            // amazing object sort function
+            spendingList=spendingList.sort(function(a, b){
+                return a.createTime >b.createTime ? 1:-1;
+            })
+            spendingDetail= spendingList.map((e) => {
+                return (
+                    // <div key={e.id}>
+                        
+                        <ShowSpending
+                            key ={e.id}
+                            goodsTag={e.type}
+                            price={e.price}
+                        />
+                        
+                    // </div>
+                );
+            })
+        }
+        // 重複會 把舊的更新調
+        let lunchDetail
+        if (this.props.lunchList.length > 0) {
+            lunchDetail = this.props.lunchList.map((e) => {
                 return (
                     // <div key={e.id}>
                         
@@ -62,16 +89,13 @@ export default class TrackSpendingForm extends Component {
                             <td>100</td>
                             <td>5</td>
                         </tr>
-                        {/* <tr>
-                            <td>show value1</td>
-                            <td></td>
-                            <td></td>
-                        </tr> */}
+                       
                         <tr>
                             <td>{this.props.goodsTag}</td>
                             <td>{this.props.price}</td>
                             <td></td>
                         </tr>
+
                         {/* <tr> */}
                             {/* <td>{this.props.goodsTag}</td>
                             <td>{this.props.price}</td>
@@ -79,9 +103,9 @@ export default class TrackSpendingForm extends Component {
                             {/* click 早餐就會 show 東西出來 */}
                             {/* 點價錢要在按記起來才會跑 row */}
                         {/* </tr> */}
-                        {breakfastDetail}
-
-
+                        {/* {breakfastDetail}
+                        {lunchDetail} */}
+                        {spendingDetail}
 
                     </tbody>
                 </table>

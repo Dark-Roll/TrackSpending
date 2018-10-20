@@ -37,6 +37,7 @@ export default function breakfast(state = breakfastList, action) {
                 ...state,
                 {
                     id: action.data.id,
+                    type: action.data.type,
                     price: action.data.price,
                     interest: undefined,
                     createTime: action.data.time,

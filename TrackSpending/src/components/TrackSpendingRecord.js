@@ -11,26 +11,23 @@ import { newBreakfast, deleteBreakfast } from '../actions/breakfastAction';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router';
 
+import uuidv1 from 'uuid/v1';
 
 import ShowSpending from './ShowSpending';
+import { newLunch } from '../actions/lunchAction';
 
 class TrackSpendingRecord extends Component {
   constructor(props) {
     super(props);
     this.breakfastListCounter = -1;
+    this.lunchListCounter = -1;
     this.state = {
       goodsTag: "",
       price: "",
       lastScrollY: 0,
       isSlideUp: false,
 
-      goodsTags: {
-        早餐: [],
-        午餐: [],
-        晚餐: [],
-        宵夜: [],
-        // 
-      },
+
 
       endpoint: "http://192.168.59.130:5000"
     };
@@ -41,6 +38,8 @@ class TrackSpendingRecord extends Component {
     // this.refs.wrapper.addEventListener('scroll', (e)=>{console.log(e)}, true)
     // 一定要抓window的 不然沒有scroll條
     window.addEventListener('scroll', this.toggleShow, true);
+    const date = new Date()
+    console.log()
   }
 
   componentWillUnmount() {
@@ -83,12 +82,26 @@ class TrackSpendingRecord extends Component {
   }
 
   onClickNewLunch(e) {
+    // 寫成 utility
     const date = new Date()
-    const formattedTime = `${date.getHours()}:
+    const formattedTime = `${date.getFullYear()}${date.getMonth()+1+(date.getDate() < 10 ? '0'+date.getDate() : ''+date.getDate())}
+    ${date.getHours()}:
       ${(date.getMinutes() < 10 ? '0' : '')}${date.getMinutes()}:
       ${date.getSeconds()}`;
 
+      // should modify
+    // const ID = this.lunchListCounter += 1;
+
+    let uuid =uuidv1().substring(0,6)
+
     console.log(formattedTime)
+    this.props.dispatch(
+      newLunch({
+      id: uuid,
+      type: 'lunch',
+      price: this.state.price,
+      time: formattedTime,
+    }));
   }
 
   onClickNewBreakfast(e) {
@@ -98,10 +111,12 @@ class TrackSpendingRecord extends Component {
       ${date.getSeconds()}`;
 
     // socket emit
-    const ID = this.breakfastListCounter += 1;
+    // const ID = this.breakfastListCounter += 1;
+    let uuid =uuidv1().substring(0,6)
 
     this.props.dispatch(newBreakfast({
-      id: ID,
+      id: uuid,
+      type: 'breakfast',
       price: this.state.price,
       time: formattedTime,
     }));
@@ -154,7 +169,7 @@ class TrackSpendingRecord extends Component {
           {/* <breakfastDetail/> */}
 
           {/* return (
-      <Wrapper>
+
         <Dropdown
           placeholder="請選擇課程"
           fluid
@@ -164,7 +179,7 @@ class TrackSpendingRecord extends Component {
           value={value}
           onChange={onChange}
         />
-      </Wrapper>
+
     ); */}
 
           {/*
@@ -181,13 +196,7 @@ class TrackSpendingRecord extends Component {
           </div>
           項目:
 
-        <input className="spendingItem"
-            onChange={e => {
-              this.setState({
-                spending: e.target.value
-              });
-            }}
-          />
+
 
           {/* 每案一次就會新增一次 */}
           <button
@@ -197,6 +206,13 @@ class TrackSpendingRecord extends Component {
               })
             }}
           >早餐</button>
+          <button
+            onClick={() => {
+              this.setState({
+                goodsTag: "lunch"
+              })
+            }}
+          >午餐</button>
           {/* 午餐 晚餐 宵夜 活動(社交、娛樂) 活動(學習) 飲料(咖啡廳 下午茶))  */}
           {/* (衣服 住 看電影 買書 悠遊卡 加油) */}
 
@@ -238,6 +254,7 @@ class TrackSpendingRecord extends Component {
           <TrackSpendingForm
             // spending={this.state.spending}
             breakfastList={this.props.breakfastList}
+            lunchList={this.props.lunchList}
             goodsTag={this.state.goodsTag}
             price={this.state.price}
           />
@@ -261,6 +278,7 @@ const mapStateToProps = state => {
   return {
     // breakfastID: state.breakfast.id,
     breakfastList: state.breakfast,
+    lunchList: state.lunch
     // agendaList: state.agenda
     // roomID: state.room.roomID,
     // roomOwner: state.room.roomOwner,
